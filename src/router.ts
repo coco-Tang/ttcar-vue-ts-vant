@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 09:22:16
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-08-29 14:01:09
+ * @LastEditTime: 2019-09-11 14:02:41
  * @Description: 路由
  */
 import Vue from 'vue';
@@ -31,6 +31,11 @@ const router = new Router({
           path: 'orderlist',
           name: 'orderlist',
           component: () => import(/* webpackChunkName: "orderlist" */ './views/order/OrderList.vue')
+        },
+        {
+          path: 'orderedit',
+          name: 'orderedit',
+          component: () => import(/* webpackChunkName: "orderedit" */ './views/order/OrderEdit.vue')
         }]
     },
     {
