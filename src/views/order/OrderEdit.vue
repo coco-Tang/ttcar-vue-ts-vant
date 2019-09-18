@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 13:57:45
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-09-11 17:30:30
+ * @LastEditTime: 2019-09-18 17:20:19
  * @Description: 订单
  -->
 <template>
@@ -30,10 +30,27 @@
           <div class="form-info">
             <h3>请填写以下资料</h3>
             <van-cell-group>
-              <van-field v-model="applicant" label="申请人姓名" placeholder="请输入姓名" />
-              <van-field v-model="phoneNumber" label="申请人手机号" placeholder="请输入手机号" />
+              <van-field
+                v-model="applicant"
+                label="申请人姓名"
+                placeholder="请输入姓名"
+                @blur="applicantValidate"
+                :error-message="applicantErrorMessage"
+              />
+              <van-field
+                v-model="phoneNumber"
+                label="申请人手机号"
+                placeholder="请输入手机号"
+                @blur="phoneNumberValidate"
+                :error-message="phoneNumberErrorMessage"
+              />
               <!-- v-model="reserveTime" -->
-              <van-field label="预约服务时间" placeholder="请选择时间" @focus="timeShow = true" />
+              <van-field
+                label="预约服务时间"
+                placeholder="请选择时间"
+                v-model="selectedDate"
+                @focus="timeShow = true"
+              />
               <!-- <van-field
                 v-model="remark"
                 label="备注"
@@ -60,7 +77,8 @@
             type="datetime"
             :min-date="minDate"
             :max-date="maxDate"
-            @confirm="getReserveTime"
+            @confirm="reservationSubmit"
+            @cancel="timePickerCancel"
           />
         </van-action-sheet>
       </van-tab>
@@ -72,6 +90,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { login } from "@/service/login";
 import { Dialog } from "vant";
+import { dateformat } from "@/utils/global";
 
 @Component({
   components: {
@@ -81,7 +100,9 @@ import { Dialog } from "vant";
 export default class Home extends Vue {
   private show: Boolean = false;
   private timeShow: Boolean = false;
-  private activeOrder: String = "storeService";
+  private activeOrder: string = "storeService";
+  private applicantErrorMessage: string = "";
+  private phoneNumberErrorMessage: string = "";
   private items: any[] = [
     {
       // 导航名称
@@ -128,8 +149,8 @@ export default class Home extends Vue {
   ];
   private activeIds: Number[] = [1];
   private activeIndex: Number = 0;
-  private applicant: String = "";
-  private phoneNumber: Number = 132;
+  private applicant: string = "";
+  private phoneNumber: string = "";
   private reserveTime: Number = 0;
   private minHour: Number = 10;
   private maxHour: Number = 20;
@@ -150,18 +171,45 @@ export default class Home extends Vue {
     return serviceName;
   }
 
-  // get maxDate() {
-  //   let myDate = this.minDate;
-  //   // console.log(myDate);
-  //   myDate.setDate(myDate.getDate() + 31);
-  //   // console.log(myDate);
-  //   return myDate;
-  // }
-
-  private getReserveTime(): void {
-    console.log("getReserveTime", this.maxDate, this.currentDate);
+  get selectedDate() {
+    if (this.currentDate instanceof Date) {
+      return dateformat(this.currentDate);
+    }
+    let begin_date = new Date();
+    let end_date = new Date();
+    begin_date.setTime(end_date.getTime() + 1 * 24 * 60 * 60 * 1000);
+    return dateformat(begin_date);
   }
-  private reservationSubmit(): void {}
+
+  private applicantValidate(): void {
+    if (!this.applicant) {
+      this.applicantErrorMessage = "申请人名称不能为空";
+    } else {
+      this.applicantErrorMessage = "";
+    }
+  }
+
+  private phoneNumberValidate(): void {
+    const phoneNumber = this.phoneNumber;
+    if (!phoneNumber) {
+      this.phoneNumberErrorMessage = "申请人手机号不能为空";
+    } else if (!/^1(3|4|5|6|7|8|9)\d{9}$/.test(phoneNumber)) {
+      this.phoneNumberErrorMessage = "输入手机号格式不对";
+    } else {
+      this.phoneNumberErrorMessage = "";
+    }
+  }
+
+  private reservationSubmit(): void {
+    this.applicantValidate();
+    this.phoneNumberValidate();
+    this.timeShow = false;
+    this.$router.push({ name: "ordersuccess" });
+    // console.log("getReserveTime", this.maxDate, this.currentDate);
+  }
+  private timePickerCancel(): void {
+    this.timeShow = false;
+  }
   private dialogClose(): void {
     this.show = false;
     this.activeIds = [];
@@ -172,9 +220,7 @@ export default class Home extends Vue {
   }
   private getMaxDate(): Date {
     let myDate = new Date();
-    // console.log(myDate);
     myDate.setDate(myDate.getDate() + 31);
-    // console.log(myDate);
     return myDate;
   }
 }
