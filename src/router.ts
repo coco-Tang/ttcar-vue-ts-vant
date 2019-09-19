@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 09:22:16
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-09-18 17:20:06
+ * @LastEditTime: 2019-09-19 16:48:25
  * @Description: 路由
  */
 import Vue from 'vue';
@@ -26,6 +26,11 @@ const router = new Router({
           path: 'home',
           name: 'home',
           component: Home
+        },
+        {
+          path: 'todo',
+          name: 'todo',
+          component: () => import(/* webpackChunkName: "todo" */ './views/todo/TodoList.vue')
         },
         {
           path: 'orderlist',
