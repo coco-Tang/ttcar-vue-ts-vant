@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 13:57:45
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-09-19 16:44:32
+ * @LastEditTime: 2019-09-23 11:10:18
  * @Description: 订单
  -->
 <template>
@@ -81,9 +81,6 @@
             @cancel="timePickerCancel"
           />
         </van-action-sheet>
-      </van-tab>
-      <van-tab title="查询门店" name="storeInquire">
-        <div id="container" style="width:100%;height:200px;"></div>
       </van-tab>
     </van-tabs>
   </div>
@@ -183,135 +180,6 @@ export default class Home extends Vue {
     let end_date = new Date();
     begin_date.setTime(end_date.getTime() + 1 * 24 * 60 * 60 * 1000);
     return dateformat(begin_date);
-  }
-
-  AMapUI: any;
-  AMap: any;
-
-  cancelChooseAdress() {}
-  confirmAdress() {
-    this.getLocation();
-  }
-  getLocation() {
-    var self = this;
-    AMapUI.loadUI(["misc/PositionPicker", "misc/PoiPicker"], function(
-      PositionPicker: any,
-      PoiPicker: any
-    ) {
-      var poiPicker = new PoiPicker({
-        input: "pickerInput" //输入框的id
-      });
-
-      var map = new AMap.Map("container", {
-        zoom: 15, //缩放层级
-        center: [121.596739, 31.194049] //self.postionArray //[121.596739, 31.194049],//当前地图中心点
-      });
-
-      var positionPicker = new PositionPicker({
-        mode: "dragMap",
-        map: map
-      });
-
-      positionPicker.on("success", function(positionResult: any) {
-        document.getElementById("lnglat")!.innerHTML = positionResult.position;
-        document.getElementById("address")!.innerHTML = positionResult.address;
-        document.getElementById("nearestJunction")!.innerHTML =
-          positionResult.nearestJunction;
-        document.getElementById("nearestRoad")!.innerHTML =
-          positionResult.nearestRoad;
-        document.getElementById("nearestPOI")!.innerHTML =
-          positionResult.nearestPOI;
-
-        self.addressInfo.address = positionResult.address;
-        self.addressInfo.position = positionResult.position;
-      });
-      positionPicker.on("fail", function(positionResult: any) {
-        document.getElementById("lnglat")!.innerHTML = " ";
-        document.getElementById("address")!.innerHTML = " ";
-        document.getElementById("nearestJunction")!.innerHTML = " ";
-        document.getElementById("nearestRoad")!.innerHTML = " ";
-        document.getElementById("nearestPOI")!.innerHTML = " ";
-
-        self.addressInfo.address = positionResult.address;
-        self.addressInfo.position = positionResult.position;
-      });
-      positionPicker.start();
-      map.panBy(0, 1);
-
-      //初始化poiPicker
-      poiPickerReady(poiPicker);
-      // 搜索框
-      function poiPickerReady(poiPicker: any) {
-        (window as any).poiPicker = poiPicker;
-        var marker = new AMap.Marker();
-        var infoWindow = new AMap.InfoWindow({
-          offset: new AMap.Pixel(0, -20)
-        });
-        //选取了某个POI
-        poiPicker.on("poiPicked", function(poiResult: any) {
-          var source = poiResult.source,
-            poi = poiResult.item,
-            info = {
-              source: source,
-              id: poi.id,
-              name: poi.name,
-              location: poi.location.toString(),
-              address: poi.address
-            };
-          infoWindow.setMap(map);
-          marker.setPosition(poi.location);
-          infoWindow.setPosition(poi.location);
-          infoWindow.open(map, marker.getPosition());
-          map.setCenter(marker.getPosition());
-        });
-      }
-    });
-  }
-
-  initAmap() {
-    var lnglat = [116.473188, 39.993253];
-    var map = new AMap.Map("container", {
-      resizeEnable: true,
-      center: lnglat,
-      zoom: 15
-    });
-    var marker = new AMap.Marker({
-      position: lnglat
-    });
-    marker.setMap(map);
-
-    var content =
-      '<div class="info-title">高德地图</div><div class="info-content">' +
-      '<img src="https://webapi.amap.com/images/amap.jpg">' +
-      "高德是中国领先的数字地图内容、导航和位置服务解决方案提供商。<br/>" +
-      '<a target="_blank" href = "https://mobile.amap.com/">点击下载高德地图</a></div>';
-    var infowindow1 = new AMap.AdvancedInfoWindow({
-      content: content,
-      offset: new AMap.Pixel(0, -30)
-    });
-    var infowindow2 = new AMap.AdvancedInfoWindow({
-      content: content,
-      asOrigin: false,
-      asDestination: false,
-      offset: new AMap.Pixel(0, -30)
-    });
-    var infowindow3 = new AMap.AdvancedInfoWindow({
-      content: content,
-      placeSearch: false,
-      asDestination: false,
-      offset: new AMap.Pixel(0, -30)
-    });
-  }
-
-  private mounted() {
-    return;
-  }
-
-  @Watch("activeOrder") private activeOrderChanged(val: string) {
-    if (val === "storeInquire") {
-      // console.log(1);//第一次进入此处地图未显示，再次进入此tab页才显示
-      
-    }
   }
 
   private applicantValidate(): void {

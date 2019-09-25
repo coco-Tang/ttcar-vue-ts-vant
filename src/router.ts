@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 09:22:16
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-09-19 16:48:25
+ * @LastEditTime: 2019-09-24 10:55:17
  * @Description: 路由
  */
 import Vue from 'vue';
@@ -13,7 +13,7 @@ import Home from './views/home/Home.vue';
 Vue.use(Router);
 
 const router = new Router({
-  mode: 'history',
+  // mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     {
@@ -28,14 +28,9 @@ const router = new Router({
           component: Home
         },
         {
-          path: 'todo',
-          name: 'todo',
-          component: () => import(/* webpackChunkName: "todo" */ './views/todo/TodoList.vue')
-        },
-        {
-          path: 'orderlist',
-          name: 'orderlist',
-          component: () => import(/* webpackChunkName: "orderlist" */ './views/order/OrderList.vue')
+          path: 'navigation',
+          name: 'navigation',
+          component: () => import(/* webpackChunkName: "navigation" */ './views/navigation/Navigation.vue')
         },
         {
           path: 'orderedit',
@@ -46,7 +41,11 @@ const router = new Router({
           path: 'ordersuccess',
           name: 'ordersuccess',
           component: () => import(/* webpackChunkName: "ordersuccess" */ './views/order/OrderSuccess.vue')
-        }]
+        }, {
+          path: 'user',
+          name: 'user',
+          component: () => import(/* webpackChunkName: "user" */ './views/user/UserCenter.vue')
+        },]
     },
     {
       path: '/login',
