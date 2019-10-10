@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 13:57:45
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-09-23 11:10:18
+ * @LastEditTime: 2019-10-08 09:50:09
  * @Description: 订单
  -->
 <template>
@@ -59,6 +59,12 @@
                 rows="1"
                 autosize
               />-->
+              <van-button
+                type="info"
+                style="margin:10px;"
+                size="small"
+                @click="reservationSubmit"
+              >确认下单</van-button>
             </van-cell-group>
           </div>
         </div>
