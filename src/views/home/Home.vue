@@ -2,24 +2,49 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 09:22:16
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-10-10 17:35:24
+ * @LastEditTime: 2019-10-11 16:11:26
  * @Description: 主页
  -->
 <template>
   <div class="home">
-    <form action="/">
-      <van-search v-model="searchVal" placeholder="请输入搜索关键词" show-action @search="onSearch" />
-    </form>
-    <!-- 面板形式展示 -->
-    <van-panel
-      title="订单号"
-      :desc="service.id"
-      :status="service.status ? '已完成' : '待处理'"
-      v-for="service in serviceList"
-      :key="service.id"
-    >
-      <div class="service">
-        <!-- <div type="ticket" class="--flex-column">
+    <div class="search">
+      <form action="/">
+        <van-search
+          v-model="searchVal"
+          placeholder="请输入搜索关键词(姓名，联系方式)"
+          show-action
+          @search="onSearch"
+        />
+      </form>
+    </div>
+    <!-- -->
+
+    <!-- 过滤条件 -->
+    <!-- <div class="filter-item">
+      <div class="item">
+        <div class="label">服务项目:</div>
+        <div class="type">
+          <van-button
+            size="small"
+            v-for="(service,idx) in serviceItemType"
+            :key="idx"
+            :type="service.type"
+            @click="filterList"
+          >{{service.label}}</van-button>
+        </div>
+      </div>
+    </div>-->
+    <div class="list">
+      <!-- 面板形式展示 -->
+      <van-panel
+        title="订单号"
+        :desc="service.id"
+        :status="service.status ? '已完成' : '待处理'"
+        v-for="service in serviceList"
+        :key="service.id"
+      >
+        <div class="service">
+          <!-- <div type="ticket" class="--flex-column">
           <div class="top --flex-column">
             <div class="bandname -bold">Ghost Mice</div>
             <div class="tourname">Home Tour</div>
@@ -42,25 +67,27 @@
             <div class="barcode"></div>
             <a class="buy" href="#">BUY TICKET</a>
           </div>
-        </div>-->
-        <div class="list">
-          <p style="display:flex;">
-            <span>车牌号：</span>
-            <span class="car-number">{{service.customer.carNo}}</span>
-          </p>
-          <p>
-            <span>服务项目：</span>
-            <span>{{service.serviceItem ? service.serviceItem.join('、') : '无'}}</span>
-          </p>
-          <p>服务时间：{{service.finishedTime}}</p>
-          <p>
-            姓名及联系方式：
-            <span>{{service.customer.name}}</span>
-            <span class="phone">（{{service.customer.phone}}）</span>
-          </p>
+          </div>-->
+          <div class="list">
+            <p style="display:flex;">
+              <span>车牌号：</span>
+              <span class="car-number">{{service.customer.carNo}}</span>
+            </p>
+            <p>
+              <span>服务项目：</span>
+              <span>{{service.serviceItem ? service.serviceItem.join('、') : '无'}}</span>
+            </p>
+            <p>服务时间：{{service.finishedTime}}</p>
+            <p>
+              姓名及联系方式：
+              <span>{{service.customer.name}}</span>
+              <span class="phone" @click="call">（{{service.customer.phone}}）</span>
+            </p>
+          </div>
         </div>
-      </div>
-    </van-panel>
+      </van-panel>
+    </div>
+
     <!-- 列表形式展示 -->
     <!-- <van-list
       :finished="finished"
@@ -105,6 +132,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+// import { SERVICE_ITEM_TYPE } from "@/constant";
+// console.log(SERVICE_ITEM_TYPE);
 
 @Component
 export default class Home extends Vue {
@@ -147,6 +176,24 @@ export default class Home extends Vue {
       }
     }
   ];
+  private serviceItemType: any[] = [
+    {
+      label: "全部",
+      type: "info"
+    },
+    {
+      label: "洗车",
+      type: "default"
+    },
+    {
+      label: "贴膜",
+      type: "default"
+    },
+    {
+      label: "补胎",
+      type: "default"
+    }
+  ];
   private searchVal: string = "";
   private finishedText: string = "";
   private finished: boolean = false;
@@ -159,12 +206,34 @@ export default class Home extends Vue {
   private onSearch() {
     console.log("onSearch", this.searchVal);
   }
+
+  private call() {
+    console.log("调用通讯录");
+  }
+
+  private filterList() {
+    this.$set(this.serviceItemType, "type");
+  }
 }
 </script>
 <style lang="less">
 .home {
   width: 100%;
   height: 100%;
+  .filter-item {
+    .item {
+      display: flex;
+      align-items: center;
+      .label {
+        margin: 0 10px;
+      }
+    }
+  }
+  .list {
+    height: calc(100% - 54px);
+    overflow: scroll;
+    // background-color: #999;
+  }
 }
 .service {
   padding: 0 20px;

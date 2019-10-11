@@ -2,87 +2,92 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 13:57:45
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-10-11 17:48:12
+ * @LastEditTime: 2019-10-11 16:29:56
  * @Description: 订单
  -->
 <template>
   <div class="order">
-    <div class="wrap">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding: 0 10px;">
-        <div style="text-align:center;">
-          <h3>
-            你已选择
-            <span style="color:#ee0a24">{{ activeIds.length }}</span>
-            个服务
-          </h3>
-          <div>({{serviceItem.length ? serviceItem.join("、") : "无"}})</div>
-        </div>
+    <van-tabs v-model="activeOrder">
+      <van-tab title="预约上门服务" name="homeService">预约上门服务</van-tab>
+      <van-tab title="预约门店修理" name="storeService">
+        <div class="wrap">
+          <div
+            style="display:flex;justify-content:space-between;align-items:center;padding: 0 10px;"
+          >
+            <div style="text-align:center;">
+              <h3>
+                你已选择
+                <span style="color:#ee0a24">{{ activeIds.length }}</span>
+                个服务
+              </h3>
+              <div>({{serviceItem.length ? serviceItem.join("、") : "无"}})</div>
+            </div>
 
-        <van-button type="danger" @click="show = true;">服务选择</van-button>
-      </div>
-      <hr />
-      <div class="form-info">
-        <h3>请填写以下资料</h3>
-        <van-cell-group>
-          <van-field
-            v-model="carNum"
-            label="车牌号"
-            placeholder="请输入车牌号"
-            @blur="applicantValidate"
-            :error-message="carNumErrorMessage"
-          />
-          <van-field
-            v-model="applicant"
-            label="车主姓名"
-            placeholder="请输入姓名"
-            @blur="applicantValidate"
-            :error-message="applicantErrorMessage"
-          />
-          <van-field
-            v-model="phoneNumber"
-            label="车主手机号"
-            placeholder="请输入手机号"
-            @blur="phoneNumberValidate"
-            :error-message="phoneNumberErrorMessage"
-          />
-          <!-- v-model="reserveTime" -->
-          <!-- <van-field
-            label="预约服务时间"
-            placeholder="请选择时间"
-            v-model="selectedDate"
-            @focus="timeShow = true"
-          />-->
-          <!-- <van-field
+            <van-button type="danger" @click="show = true;">服务选择</van-button>
+          </div>
+          <hr />
+          <div class="form-info">
+            <h3>请填写以下资料</h3>
+            <van-cell-group>
+              <van-field
+                v-model="applicant"
+                label="申请人姓名"
+                placeholder="请输入姓名"
+                @blur="applicantValidate"
+                :error-message="applicantErrorMessage"
+              />
+              <van-field
+                v-model="phoneNumber"
+                label="申请人手机号"
+                placeholder="请输入手机号"
+                @blur="phoneNumberValidate"
+                :error-message="phoneNumberErrorMessage"
+              />
+              <!-- v-model="reserveTime" -->
+              <van-field
+                label="预约服务时间"
+                placeholder="请选择时间"
+                v-model="selectedDate"
+                @focus="timeShow = true"
+              />
+              <!-- <van-field
                 v-model="remark"
                 label="备注"
                 type="textarea"
                 placeholder="请输入留言"
                 rows="1"
                 autosize
-          />-->
-          <van-button type="info" style="margin:10px;" size="small" @click="reservationSubmit">确认下单</van-button>
-        </van-cell-group>
-      </div>
-    </div>
+              />-->
+              <van-button
+                type="info"
+                style="margin:10px;"
+                size="small"
+                @click="reservationSubmit"
+              >确认下单</van-button>
+            </van-cell-group>
+          </div>
+        </div>
 
-    <van-dialog v-model="show" title="选择服务" show-cancel-button>
-      <van-tree-select
-        :items="items"
-        :active-id.sync="activeIds"
-        :main-active-index.sync="activeIndex"
-      />
-    </van-dialog>
+        <van-dialog v-model="show" title="选择服务" show-cancel-button>
+          <van-tree-select
+            :items="items"
+            :active-id.sync="activeIds"
+            :main-active-index.sync="activeIndex"
+          />
+        </van-dialog>
 
-    <van-action-sheet v-model="timeShow">
-      <van-datetime-picker
-        v-model="currentDate"
-        type="datetime"
-        :min-date="minDate"
-        :max-date="maxDate"
-        @confirm="reservationSubmit"
-        @cancel="timePickerCancel"
-      />
-    </van-action-sheet>
+        <van-action-sheet v-model="timeShow">
+          <van-datetime-picker
+            v-model="currentDate"
+            type="datetime"
+            :min-date="minDate"
+            :max-date="maxDate"
+            @confirm="reservationSubmit"
+            @cancel="timePickerCancel"
+          />
+        </van-action-sheet>
+      </van-tab>
+    </van-tabs>
   </div>
 </template>
 <script lang="ts">
@@ -91,7 +96,6 @@ import { login } from "@/service/login";
 import { Dialog } from "vant";
 import { dateformat } from "@/utils/global";
 // import Amap from "../../components/Amap.vue";
-// import "./MixedKeyboard";
 
 @Component({
   components: {
@@ -102,7 +106,6 @@ export default class Home extends Vue {
   private show: Boolean = false;
   private timeShow: Boolean = false;
   private activeOrder: string = "storeService";
-  private carNumErrorMessage: string = "";
   private applicantErrorMessage: string = "";
   private phoneNumberErrorMessage: string = "";
   private items: any[] = [
@@ -151,7 +154,6 @@ export default class Home extends Vue {
   ];
   private activeIds: Number[] = [1];
   private activeIndex: Number = 0;
-  private carNum: string = "";
   private applicant: string = "";
   private phoneNumber: string = "";
   private reserveTime: Number = 0;
@@ -187,7 +189,7 @@ export default class Home extends Vue {
 
   private applicantValidate(): void {
     if (!this.applicant) {
-      this.applicantErrorMessage = "车主名称不能为空";
+      this.applicantErrorMessage = "申请人名称不能为空";
     } else {
       this.applicantErrorMessage = "";
     }
@@ -196,7 +198,7 @@ export default class Home extends Vue {
   private phoneNumberValidate(): void {
     const phoneNumber = this.phoneNumber;
     if (!phoneNumber) {
-      this.phoneNumberErrorMessage = "车主手机号不能为空";
+      this.phoneNumberErrorMessage = "申请人手机号不能为空";
     } else if (!/^1(3|4|5|6|7|8|9)\d{9}$/.test(phoneNumber)) {
       this.phoneNumberErrorMessage = "输入手机号格式不对";
     } else {

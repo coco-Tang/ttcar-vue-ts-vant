@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 10:02:14
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-09-23 11:13:38
+ * @LastEditTime: 2019-10-11 10:20:21
  * @Description: layout组件
  -->
 <template>
@@ -40,6 +40,8 @@ export default class Home extends Vue {
   .router-view-wrap {
     width: 100%;
     height: calc(100% - 100px);
+    // overflow: scroll;
+    // margin-bottom: 100px;
   }
 }
 </style>
