@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 09:22:16
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-10-11 16:11:26
+ * @LastEditTime: 2019-10-22 14:08:38
  * @Description: 主页
  -->
 <template>
@@ -212,7 +212,7 @@ export default class Home extends Vue {
   }
 
   private filterList() {
-    this.$set(this.serviceItemType, "type");
+    this.$set(this.serviceItemType, "type", 1);
   }
 }
 </script>

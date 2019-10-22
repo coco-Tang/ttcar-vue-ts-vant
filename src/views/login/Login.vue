@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 09:40:08
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-08-29 20:22:29
+ * @LastEditTime: 2019-10-22 14:57:55
  * @Description: 登录
  -->
 <template>
@@ -35,8 +35,9 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { login } from "@/service/login";
-import axios from "axios";
+// import { login } from "@/service/login";
+// import axios from "axios";
+import BaseService from "@/service/index";
 
 @Component
 export default class Home extends Vue {
@@ -47,19 +48,10 @@ export default class Home extends Vue {
   }
 
   private loginSubmit(): void {
-    axios({
-      // baseUrl: "/ttcar",
-      url: "/login",
-      method: "POST",
-      data: { username: this.username, password: this.password }
-    }).then(res => {
-      console.log(res.data);
+    console.log(this.username,this.password);
+    BaseService.login(this.username, this.password).then(res => {
+      console.log("loginSubmit", res);
     });
-    // login({ username: this.username, password: this.password }).then(
-    //   (res: any) => {
-    //     console.log("login");
-    //   }
-    // );
   }
 }
 </script>

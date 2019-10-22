@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-10-11 15:29:21
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-10-11 15:36:16
+ * @LastEditTime: 2019-10-22 10:44:48
  * @Description: 常量
  */
 
@@ -19,3 +19,6 @@ export enum SERVICE_ITEM_TYPE {
   TIRE_REPAIRE = 3,
   ENGINE = 4
 }
+
+// service
+export const SUCCESS_RESPONSE_CODE = 200;
