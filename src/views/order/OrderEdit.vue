@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 13:57:45
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-10-11 17:48:12
+ * @LastEditTime: 2019-10-23 09:36:12
  * @Description: 订单
  -->
 <template>
@@ -87,9 +87,10 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import { login } from "@/service/login";
+import orderServices from "@/service/order";
 import { Dialog } from "vant";
 import { dateformat } from "@/utils/global";
+
 // import Amap from "../../components/Amap.vue";
 // import "./MixedKeyboard";
 
@@ -208,7 +209,19 @@ export default class Home extends Vue {
     this.applicantValidate();
     this.phoneNumberValidate();
     this.timeShow = false;
-    this.$router.push({ name: "ordersuccess" });
+    orderServices
+      .order_create({
+        carNo: this.carNum,
+        // carBrand,
+        // carType,
+        carOwner: this.applicant,
+        carTel: this.phoneNumber,
+        serviceType: this.activeIds
+      })
+      .then(result => {
+        console.log(result);
+        this.$router.push({ name: "ordersuccess" });
+      });
     // console.log("getReserveTime", this.maxDate, this.currentDate);
   }
   private timePickerCancel(): void {

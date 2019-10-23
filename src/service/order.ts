@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-10-22 15:35:03
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-10-22 17:52:59
+ * @LastEditTime: 2019-10-23 09:42:28
  * @Description: 
  */
 import BaseServices from './index';
@@ -17,7 +17,7 @@ interface OrderCreateType {
   serviceType: number;
 }
 
-export default class Services extends BaseServices {
+export default class orderServices extends BaseServices {
 
   /**
    * 获取未发布和已发布的作业数量
@@ -31,11 +31,11 @@ export default class Services extends BaseServices {
    *
    * @memberOf Services
    */
-  public static async get_action_count(termid: number, gradeid: number, subjectid: number, teacherid: number):
+  public static async get_order_list(termid: number, gradeid: number, subjectid: number, teacherid: number):
     Promise<{ nonPubilc: number, pubilc: number }> {
 
     const result = await this.base_get({
-      url: this.create_order_api('/api/index/get-action-count'),
+      url: this.create_order_api('/api/index/get-order-list'),
       params: { termid, gradeid, subjectid, teacherid },
     });
 

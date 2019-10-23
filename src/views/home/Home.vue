@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 09:22:16
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-10-22 14:08:38
+ * @LastEditTime: 2019-10-23 09:50:50
  * @Description: 主页
  -->
 <template>
@@ -132,6 +132,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import orderServices from "@/service/order";
 // import { SERVICE_ITEM_TYPE } from "@/constant";
 // console.log(SERVICE_ITEM_TYPE);
 
@@ -201,6 +202,9 @@ export default class Home extends Vue {
 
   private getserviceList() {
     console.log("getserviceList");
+    orderServices.get_order_list().then(res => {
+      console.log(res);
+    });
   }
 
   private onSearch() {
