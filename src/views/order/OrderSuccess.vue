@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-09-18 17:12:56
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-09-18 17:48:50
+ * @LastEditTime: 2019-12-11 10:19:33
  * @Description: 
  -->
 <template>
@@ -28,7 +28,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { login } from "@/service/login";
+import { login } from "@/services/login";
 import { Dialog } from "vant";
 import { dateformat } from "@/utils/global";
 

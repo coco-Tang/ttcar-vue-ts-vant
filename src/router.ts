@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 09:22:16
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-09-24 10:55:17
+ * @LastEditTime: 2019-12-04 13:49:37
  * @Description: 路由
  */
 import Vue from 'vue';
@@ -20,7 +20,7 @@ const router = new Router({
       path: '/',
       name: 'index',
       component: Index,
-      redirect: 'home',
+      // redirect: 'home',
       children: [
         {
           path: 'home',
@@ -49,6 +49,7 @@ const router = new Router({
     },
     {
       path: '/login',
+      name: 'login',
       component: () => import(/* webpackChunkName: "login" */ './views/login/Login.vue')
     },
     {

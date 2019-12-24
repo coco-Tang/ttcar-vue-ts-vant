@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 09:22:16
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-10-23 09:50:50
+ * @LastEditTime: 2019-12-11 10:18:39
  * @Description: 主页
  -->
 <template>
@@ -132,7 +132,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import orderServices from "@/service/order";
+import orderServices from "@/services/order";
 // import { SERVICE_ITEM_TYPE } from "@/constant";
 // console.log(SERVICE_ITEM_TYPE);
 

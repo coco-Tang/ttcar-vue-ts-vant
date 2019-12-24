@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-10-22 15:35:03
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-10-23 09:42:28
+ * @LastEditTime: 2019-12-11 17:20:10
  * @Description: 
  */
 import BaseServices from './index';
@@ -13,8 +13,8 @@ interface OrderCreateType {
   carBrand: string;
   carType: string;
   carOwner: string;
-  carTel: number;
-  serviceType: number;
+  carTel: string;
+  serviceType: string;
 }
 
 export default class orderServices extends BaseServices {

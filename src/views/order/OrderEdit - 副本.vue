@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 13:57:45
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-10-11 16:29:56
+ * @LastEditTime: 2019-12-11 10:19:25
  * @Description: 订单
  -->
 <template>
@@ -92,7 +92,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import { login } from "@/service/login";
+import { login } from "@/services/login";
 import { Dialog } from "vant";
 import { dateformat } from "@/utils/global";
 // import Amap from "../../components/Amap.vue";

@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 09:40:08
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-10-22 14:57:55
+ * @LastEditTime: 2019-12-11 13:57:37
  * @Description: 登录
  -->
 <template>
@@ -35,23 +35,43 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-// import { login } from "@/service/login";
-// import axios from "axios";
-import BaseService from "@/service/index";
+import { Action, Getter } from "vuex-class";
+import BaseService from "@/services";
 
 @Component
 export default class Home extends Vue {
-  private username: String = "";
-  private password: String = "";
+  @Action("auth/login") private login_action!: ({
+    username,
+    password
+  }: {
+    username: string;
+    password: string;
+  }) => Promise<TTCAR.ResponseStatusType>;
+  private username: string = "";
+  private password: string = "";
   private get disabled() {
     return !this.username && !this.password;
   }
 
-  private loginSubmit(): void {
-    console.log(this.username,this.password);
-    BaseService.login(this.username, this.password).then(res => {
-      console.log("loginSubmit", res);
-    });
+  private async loginSubmit() {
+    try {
+      // 1.表单验证
+      // todo
+      // 2.发起请求
+      var md5 = require("md5");
+      const { status, message } = await this.login_action({
+        username: this.username,
+        password: md5(this.password)
+      });
+
+      if (status) {
+        this.$router.push({ name: "home" });
+      } else {
+        if (message) {
+          this.$notify({ type: "danger", message });
+        }
+      }
+    } catch (err) {}
   }
 }
 </script>

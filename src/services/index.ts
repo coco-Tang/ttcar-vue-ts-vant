@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 17:01:57
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-10-22 16:04:48
+ * @LastEditTime: 2019-12-04 15:21:17
  * @Description: request
  */
 import Axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
@@ -409,9 +409,8 @@ export default class BaseServices {
    */
   public static async login(username: string, password: string): Promise<TTCAR.ResponseStatusAndDataType<TTCAR.UserEntityAndTermInfoType | null>> {
     const result = await this._login(username, password);
-
     return {
-      status: result.code === SUCCESS_RESPONSE_CODE,
+      status: result.code == SUCCESS_RESPONSE_CODE,
       message: result.message,
       data: result.data,
     };

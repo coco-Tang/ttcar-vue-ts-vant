@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-10-11 15:29:21
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-10-22 10:44:48
+ * @LastEditTime: 2019-12-04 15:20:02
  * @Description: 常量
  */
 
@@ -21,4 +21,4 @@ export enum SERVICE_ITEM_TYPE {
 }
 
 // service
-export const SUCCESS_RESPONSE_CODE = 200;
+export const SUCCESS_RESPONSE_CODE = 0;

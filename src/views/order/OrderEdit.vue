@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-08-29 13:57:45
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-10-23 09:36:12
+ * @LastEditTime: 2019-12-11 17:24:45
  * @Description: 订单
  -->
 <template>
@@ -87,7 +87,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import orderServices from "@/service/order";
+import orderServices from "@/services/order";
 import { Dialog } from "vant";
 import { dateformat } from "@/utils/global";
 
@@ -212,11 +212,11 @@ export default class Home extends Vue {
     orderServices
       .order_create({
         carNo: this.carNum,
-        // carBrand,
-        // carType,
+        carBrand,
+        carType,
         carOwner: this.applicant,
         carTel: this.phoneNumber,
-        serviceType: this.activeIds
+        serviceType: this.activeIds.map(item => item + "").join("")
       })
       .then(result => {
         console.log(result);

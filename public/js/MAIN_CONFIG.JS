@@ -2,7 +2,7 @@
  * @Author: coco-Tang
  * @Date: 2019-10-22 14:39:08
  * @LastEditors: coco-Tang
- * @LastEditTime: 2019-10-22 16:06:56
+ * @LastEditTime: 2019-12-11 13:50:21
  * @Description: 
  */
 ; (function (name, definition, context) {
@@ -17,11 +17,12 @@
   // var API_ROOT = 'http://10.10.10.116:9002/';
   // var API_ROOT = 'http://10.10.10.108:9002/';
   // var API_ROOT = 'http://10.10.12.48:9002/';
-  var API_ROOT = 'http://localhost:10001/';
+  var API_ROOT = 'ttcar';
 
   return {
     // ---------------------------- api prefix ----------------------------
-    AUTH_API_ROOT: API_ROOT + 'auth',
+    AUTH_API_ROOT: API_ROOT,
+    CAR_APT_ROOT: API_ROOT + 'car',
     ORDER_API_ROOT: API_ROOT + 'order',
     QUESTION_API_ROOT: API_ROOT + 'tiku',
     COACH_API_ROOT: API_ROOT + 'coach',
