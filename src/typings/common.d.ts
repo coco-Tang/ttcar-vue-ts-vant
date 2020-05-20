@@ -44,7 +44,7 @@ declare namespace TTCAR {
    * @interface AjaxResponseType
    */
   export interface AjaxResponseType {
-    readonly code: number;   // 状态码
+    readonly code: string;   // 状态码
     readonly msg: string;    // 信息
     readonly token?: string; // token
     readonly data: any;      // 具体数据
@@ -52,7 +52,7 @@ declare namespace TTCAR {
 
   /** 登录接口的返回数据 */
   export interface LoginAjaxResponseType {
-    readonly code: number;    // 状态码
+    readonly code: string;    // 状态码
     readonly message: string; // 信息
     readonly token?: string;  // token
     readonly data: null; // 用户信息

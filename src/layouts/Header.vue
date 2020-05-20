@@ -7,7 +7,7 @@
  -->
 <template>
   <div class="header">
-    <div class="logo">ttcar-logo</div>
+    <div class="logo">启东市天天汽修</div>
   </div>
 </template>
 <script lang="ts">
@@ -27,5 +27,8 @@ export default class MyHeader extends Vue {}
   line-height: 50px;
   background-color: #856;
   text-align: center;
+  .logo {
+    color: #eee;
+  }
 }
 </style>

@@ -17,13 +17,13 @@
   // var API_ROOT = 'http://10.10.10.116:9002/';
   // var API_ROOT = 'http://10.10.10.108:9002/';
   // var API_ROOT = 'http://10.10.12.48:9002/';
-  var API_ROOT = 'ttcar';
+  var API_ROOT = '';//使用 proxy 代理时根路径不要加协议 IP 端口
 
   return {
     // ---------------------------- api prefix ----------------------------
     AUTH_API_ROOT: API_ROOT,
     CAR_APT_ROOT: API_ROOT + 'car',
-    ORDER_API_ROOT: API_ROOT + 'order',
+    ORDER_API_ROOT: API_ROOT,
     QUESTION_API_ROOT: API_ROOT + 'tiku',
     COACH_API_ROOT: API_ROOT + 'coach',
     OFFICE_API_ROOT: API_ROOT + 'office',

@@ -16,5 +16,6 @@ export function dateformat(date: Date): string {
   const H = h;
   let minute = date.getMinutes();
   const MINUTE = minute < 10 ? "0" + minute : minute;
-  return Y + "-" + M + "-" + D + " " + H + ":" + MINUTE;
+  return Y + "-" + M + "-" + D;
+  // return Y + "-" + M + "-" + D + " " + H + ":" + MINUTE;
 }

@@ -13,13 +13,13 @@ import { safe_get } from '@/utils/utils';
 import { SUCCESS_RESPONSE_CODE } from '@/constant';
 
 // 用户未登录
-const NO_LOGIN_CODE = 464;
+const NO_LOGIN_CODE = "464";
 // 其他错误
 const OTHER_ERROR_CODES = [
-  599,  // 加载失败
-  532,  // 调用第三方错误
-  9999, // 服务不可用
-  -1,   // 未知错误
+  "599",  // 加载失败
+  "532",  // 调用第三方错误
+  "9999", // 服务不可用
+  "-1",   // 未知错误
 ];
 
 /* ######################################################## 基础配置 ######################################################## */
@@ -73,7 +73,7 @@ axios.interceptors.response.use((response: AxiosResponse<TTCAR.AjaxResponseType>
   if (ENV.is_dev && loadTime > 4000) {
     console.warn(`本次加载时间为 ${loadTime / 1000}s`, `api: ${response.request.responseURL}`);
   }
-  const status_code = Number(response_data.code);
+  const status_code = response_data.code;
 
   // 2. response code 处理
   if (status_code === NO_LOGIN_CODE) {
@@ -84,9 +84,9 @@ axios.interceptors.response.use((response: AxiosResponse<TTCAR.AjaxResponseType>
     // }, 2000);
   }
   // 3. other error
-  if (OTHER_ERROR_CODES.indexOf(status_code) !== -1) {
-    // Message.error(response_data.msg || '网络错误！');
-  }
+  // if (OTHER_ERROR_CODES.indexOf(status_code) !== "-1") {
+  //   // Message.error(response_data.msg || '网络错误！');
+  // }
   // 4. 如有携带 token，则存储起来
   // if (response_data.token) { Token.set(response_data.token); }
 
@@ -113,7 +113,7 @@ export default class BaseServices {
   // 默认的请求错误信息
   private static readonly ERROR_RESPONSE: TTCAR.AjaxResponseType = {
     msg: '',
-    code: -1,
+    code: "-1",
     data: null,
   };
 
@@ -170,7 +170,7 @@ export default class BaseServices {
    */
   private static async _login(username: string, password: string): Promise<TTCAR.LoginAjaxResponseType> {
     const error_data: TTCAR.LoginAjaxResponseType = {
-      code: -1,
+      code: "-1",
       message: '',
       data: null,
     };
@@ -392,8 +392,24 @@ export default class BaseServices {
     return this.ajax({
       url: config.url,
       method: 'POST',
-      data: config.data,
+      params: config.data,
       json: config.json,
+    });
+  }
+
+  /**
+   * 基础 delete
+   *
+   * @static
+   * @param {TTCAR.DeleteConfigType} config
+   * @returns {Promise<TTCAR.AjaxResponseType>}
+   *
+   * @memberOf BaseServices
+   */
+  public static async base_delete(config: TTCAR.PostConfigType): Promise<TTCAR.AjaxResponseType> {
+    return this.ajax({
+      url: config.url,
+      method: 'DELETE'
     });
   }
 

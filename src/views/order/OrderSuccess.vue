@@ -7,8 +7,9 @@
  -->
 <template>
   <div class="order-success">
-    <h1 class="success-title">预约成功</h1>
-    <div class="wrap">
+    <h1 class="success-title">下单成功</h1>
+    <div class="cout-down">{{ count }}秒后跳转到主页</div>
+    <!-- <div class="wrap">
       <div
         class="service-item"
       >洗车{{ orderInfo.serviceItem ? orderInfo.serviceItem.map(item => {return item.name}).join("、") : "" }}</div>
@@ -23,7 +24,7 @@
       <hr />
       <div>预计服务时间：{{orderInfo.time}}</div>
       <hr />
-    </div>
+    </div>-->
   </div>
 </template>
 <script lang="ts">
@@ -35,11 +36,24 @@ import { dateformat } from "@/utils/global";
 @Component
 export default class Home extends Vue {
   private orderInfo: any = {};
+  private count: number = 3;
+  private timerId: any = null;
+  mounted() {
+    this.timerId = setInterval(() => {
+      if (this.count === 1) {
+        this.$router.push({name: 'home'});
+        clearInterval(this.timerId)
+      };
+      this.count--;
+
+    },1000)
+  }
 }
 </script>
 <style lang="less" scoped>
 @themeColor: #f44;
 .order-success {
+  text-align: center;
   .success-title {
     color: @themeColor;
     text-align: center;

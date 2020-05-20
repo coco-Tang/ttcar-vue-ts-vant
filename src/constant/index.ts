@@ -20,5 +20,13 @@ export enum SERVICE_ITEM_TYPE {
   ENGINE = 4
 }
 
+export const SERVICE_ITEM_LABEL =  (id:number)=> {
+  console.log(SERVICE_ITEM_TYPE[id])
+  switch (id) {
+    case 1:
+      return SERVICE_ITEM_TYPE[id]
+  }
+}
+
 // service
-export const SUCCESS_RESPONSE_CODE = 0;
+export const SUCCESS_RESPONSE_CODE = "0";

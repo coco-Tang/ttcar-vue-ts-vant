@@ -7,19 +7,24 @@
  -->
 <template>
   <div class="module_Navigation">
+    <!-- <el-amap vid="amapDemo" :center="center" :zoom="zoom" class="amap-demo" :events="click"></el-amap> -->
+    <!-- <div class="toolbar">position: [{{ lng }}, {{ lat }}] address: {{ address }}</div> -->
     <div v-show="isShow" @click="goBack">返回</div>
     <div id="container"></div>
-    <van-action-sheet v-model="isShowMapItem" :actions="mapItems" @select="onSelect" />
+    <!-- <van-action-sheet v-model="isShowMapItem" :actions="mapItems" @select="onSelect" /> -->
     <!-- <div id="panel"></div> -->
   </div>
 </template>
 <script lang="ts">
 import { Component, Emit, Prop, Vue, Watch } from "vue-property-decorator";
-
+declare const AMap: any;
+import VueAMap from "vue-amap";
+Vue.use(VueAMap);
 @Component({
   name: "navigation",
   components: {}
 })
+// declare AMap
 export default class Navigation extends Vue {
   /* ------------------------ INPUT & OUTPUT ------------------------ */
   // @Prop() private parentData!: any
@@ -29,7 +34,50 @@ export default class Navigation extends Vue {
   // @Action private some_action!: () => void
   /* ------------------------ LIFECYCLE HOOKS (created & mounted & ...) ------------------------ */
   // private created() {}
+  zoom: number = 12;
+  center: any = [121.59996, 31.197646];
+  address: string = "";
+  lng: number = 0;
+  lat: number = 0;
+  click(e: any) {
+    let { lng, lat } = e.lnglat;
+    this.lng = lng;
+    this.lat = lat;
+
+    // 这里通过高德 SDK 完成。
+    var geocoder = new AMap.Geocoder({
+      radius: 1000,
+      extensions: "all"
+    });
+    let self = this;
+    geocoder.getAddress([lng, lat], function(status: any, result: any) {
+      if (status === "complete" && result.info === "OK") {
+        if (result && result.regeocode) {
+          self.address = result.regeocode.formattedAddress;
+          self.$nextTick();
+        }
+      }
+    });
+  }
   private mounted() {
+    // VueAMap.initAMapApiLoader({
+    //   // 高德的key
+    //   key: "a78c809195bb2a6124a930a1e0f1eb02",
+    //   // 插件集合
+    //   plugin: [
+    //     "AMap.Autocomplete",
+    //     "AMap.PlaceSearch",
+    //     "AMap.Scale",
+    //     "AMap.OverView",
+    //     "AMap.ToolBar",
+    //     "AMap.MapType",
+    //     "AMap.PolyEditor",
+    //     "AMap.CircleEditor"
+    //   ],
+    //   // 高德 sdk 版本，默认为 1.4.4
+    //   v: "1.4.4"
+    // });
+    // return;
     var lnglat = [121.696597, 31.871499];
     var map = new AMap.Map("container", {
       resizeEnable: true,
@@ -93,7 +141,7 @@ export default class Navigation extends Vue {
   // @Watch('some_thing') private some_thing_changed(val: any, oldVal: any) {}
   /* ------------------------ METHODS ------------------------ */
   private initMap(lnglat: number[]): any {
-    // var lnglat = [121.696597, 31.871499];
+    var lnglat = [121.696597, 31.871499];
     return new AMap.Map("container", {
       resizeEnable: true,
       center: lnglat,
@@ -105,7 +153,7 @@ export default class Navigation extends Vue {
     var map = new AMap.Map("container", {
       resizeEnable: true
     });
-    //驾车导航，您如果想修改结果展现效果，请参考页面：https://lbs.amap.com/fn/css-style/
+    // 驾车导航，您如果想修改结果展现效果，请参考页面：https://lbs.amap.com/fn/css-style/
     var drivingOption = {
       policy: AMap.DrivingPolicy.LEAST_TIME
     };
@@ -151,13 +199,13 @@ export default class Navigation extends Vue {
     // 点击选项时默认不会关闭菜单，可以手动关闭
     this.isShowMapItem = false;
     // Toast(item.name);
-    switch (item.key) {
-      case 1:
-        driving.searchOnAMAP({
-          origin: result.origin,
-          destination: result.destination
-        });
-    }
+    // switch (item.key) {
+    //   case 1:
+    //     driving.searchOnAMAP({
+    //       origin: result.origin,
+    //       destination: result.destination
+    //     });
+    // }
   }
 }
 </script>

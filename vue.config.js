@@ -6,7 +6,7 @@
  * @Description: vue配置项
  */
 module.exports = {
-  publicPath: "/",
+  publicPath: "./",
   outputDir: "ttcar-dist",
   devServer: {
     proxy: {
@@ -18,12 +18,13 @@ module.exports = {
           '^/ttcar': ''
         }
       },
-      '/car': {
-        target: 'http://ttcar.gyytly.com',
+      '/admin': {
+        target: 'http://ttcar.gyytly.com/',
+        // target: 'http://192.168.0.104:8081/',
         ws: true,
         changeOrigin: true,
         pathRewrite: {
-          '^/car': ''
+          '^/admin': 'admin'
         }
       },
       '/order': {

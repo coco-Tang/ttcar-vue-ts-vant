@@ -40,7 +40,7 @@ export default class Home extends Vue {
   .router-view-wrap {
     width: 100%;
     height: calc(100% - 100px);
-    // overflow: scroll;
+    overflow: scroll;
     // margin-bottom: 100px;
   }
 }

@@ -75,10 +75,6 @@ export const PATCH_CALLBACK: PatchCallbackType | null = MAIN_CONFIG.PATCH_CALLBA
 
 // ---------------------------- 必有配置的加载检查 ----------------------------
 const api_config_arr = [AUTH_API_ROOT, ORDER_API_ROOT, QUESTION_API_ROOT, COACH_API_ROOT, OFFICE_API_ROOT, GUIDE_API_ROOT, RESOURCE_API_ROOT, DICTIONARY_API_ROOT, ADMIN_URL];
-const other_config_arr = [LOCALSTROAGE_PREFIX, TOKEN_KEY];
 if (!api_config_arr.every((i) => i)) {
   console.error('【MAIN_CONFIG】 API PREFIX 加载错误，请检查配置文件', api_config_arr);
-}
-if (!other_config_arr.every((i) => i)) {
-  console.error('【MAIN_CONFIG】 OTHER CONFIG 加载错误，请检查配置文件', other_config_arr);
 }

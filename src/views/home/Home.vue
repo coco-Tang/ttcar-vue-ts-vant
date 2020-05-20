@@ -7,42 +7,39 @@
  -->
 <template>
   <div class="home">
-    <div class="search">
-      <form action="/">
-        <van-search
-          v-model="searchVal"
-          placeholder="请输入搜索关键词(姓名，联系方式)"
-          show-action
-          @search="onSearch"
-        />
-      </form>
-    </div>
-    <!-- -->
-
-    <!-- 过滤条件 -->
-    <!-- <div class="filter-item">
-      <div class="item">
-        <div class="label">服务项目:</div>
-        <div class="type">
-          <van-button
-            size="small"
-            v-for="(service,idx) in serviceItemType"
-            :key="idx"
-            :type="service.type"
-            @click="filterList"
-          >{{service.label}}</van-button>
-        </div>
+    <van-sticky :offset-top="50">
+      <div class="search">
+        <form action="/">
+          <van-search
+            v-model="searchVal"
+            placeholder="请输入车牌号"
+            show-action
+            @search="onSearch"
+            @cancel="onCancel"
+          />
+        </form>
       </div>
-    </div>-->
-    <div class="list">
+    </van-sticky>
+
+    <van-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      :offset="10"
+      @load="onLoad"
+    >
+      <!-- <van-cell v-for="item in list" :key="item" :title="item" /> -->
       <!-- 面板形式展示 -->
       <van-panel
-        title="订单号"
-        :desc="service.id"
-        :status="service.status ? '已完成' : '待处理'"
+        title
+        :desc="'订单号 '+ service.orderId+''"
         v-for="service in serviceList"
         :key="service.id"
       >
+        <!-- @click="goDetail(service)" -->
+        <!-- @touchstart="touchstart" -->
+        <!-- @touchend="touchend(service.id)" -->
+        <!-- :status="service.status ? '已完成' : '待处理'" -->
         <div class="service">
           <!-- <div type="ticket" class="--flex-column">
           <div class="top --flex-column">
@@ -71,22 +68,75 @@
           <div class="list">
             <p style="display:flex;">
               <span>车牌号：</span>
-              <span class="car-number">{{service.customer.carNo}}</span>
+              <span class="car-number">{{service.carNo}}</span>
             </p>
             <p>
               <span>服务项目：</span>
-              <span>{{service.serviceItem ? service.serviceItem.join('、') : '无'}}</span>
+              <span class="car-service">{{service.serviceItem}}</span>
             </p>
-            <p>服务时间：{{service.finishedTime}}</p>
+            <p>维修时间：{{service.finishedTime}}</p>
+            <p>金额：¥{{service.amount}}</p>
             <p>
-              姓名及联系方式：
-              <span>{{service.customer.name}}</span>
-              <span class="phone" @click="call">（{{service.customer.phone}}）</span>
+              姓名：
+              <span>{{service.carOwner}}</span>
+              <!-- <span class="phone" @click="call">（{{service.carTel}}）</span> -->
+            </p>
+            <p>
+              联系方式:
+              <span class="phone">{{service.carTel}}</span>
+            </p>
+            <p>
+              <van-button size="small" type="info" @click="goEdit(service.id)">修改</van-button>
             </p>
           </div>
         </div>
       </van-panel>
-    </div>
+    </van-list>
+
+    <!-- <div class="list">
+      <div v-if="no_data" style="text-align:center;">暂无数据</div>
+    </div>-->
+
+    <van-popup v-model="showDelete">删除</van-popup>
+    <!-- <van-popup v-model="showDetail">
+      
+    </van-popup>-->
+    <van-dialog
+      v-model="showDetail"
+      title="修改订单"
+      show-confirm-button
+      show-cancel-button
+      @confirm="confirm"
+      @cancel="cancel"
+    >
+      <!-- <car-order :options="carOptions"></car-order> -->
+      <van-cell-group>
+        <van-field
+          v-model="carNum"
+          label="车牌号"
+          placeholder="请输入车牌号"
+          @blur="applicantValidate"
+          :error-message="carNumErrorMessage"
+        />
+        <van-field
+          v-model="orderAmount"
+          label="金额"
+          placeholder="请输入金额"
+          @blur="orderAmountValidate"
+          :error-message="orderAmountErrorMessage"
+        />
+        <van-field v-model="serviceItem" label=" 服务项目" placeholder="请输入服务项目" />
+        <van-field label="修理时间" placeholder="请选择时间" v-model="repairDate" @focus="timeShow = true" />
+      </van-cell-group>
+    </van-dialog>
+
+    <van-action-sheet v-model="timeShow">
+      <van-datetime-picker
+        type="date"
+        @cancel="timePickerCancel"
+        @confirm="timePickerConfirm"
+      />
+    </van-action-sheet>
 
     <!-- 列表形式展示 -->
     <!-- <van-list
@@ -133,50 +183,34 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import orderServices from "@/services/order";
-// import { SERVICE_ITEM_TYPE } from "@/constant";
-// console.log(SERVICE_ITEM_TYPE);
-
-@Component
+import { SERVICE_ITEM_LABEL } from "@/constant";
+import CarOrder from "@/components/CarOrder.vue";
+import { dateformat } from "@/utils/global";
+import { Toast } from "vant";
+@Component({
+  name: "home",
+  components: {
+    "car-order": CarOrder
+  }
+})
 export default class Home extends Vue {
+  timePickerConfirm(time:any) {
+    this.repairDate = dateformat(time);
+    this.timeShow = false;
+  }
+  timePickerCancel() {
+    this.timeShow = false;
+  }
+
+  private timeShow: Boolean = false;
   private images: string[] = [
     "https://img.yzcdn.cn/vant/apple-1.jpg",
     "https://img.yzcdn.cn/vant/apple-2.jpg"
   ];
-  private serviceList: any[] = [
-    {
-      id: "618182305456722288",
-      status: false,
-      serviceItem: ["洗车"],
-      finishedTime: "2019-10-11",
-      customer: {
-        name: "汤陆彦",
-        phone: "15651430850",
-        carNo: "苏F8Q0B3"
-      }
-    },
-    {
-      id: "554876292345722288",
-      status: true,
-      serviceItem: ["洗车", "贴膜"],
-      finishedTime: "2019-09-10",
-      customer: {
-        name: "汤陆彦",
-        phone: "15651430850",
-        carNo: "苏F8Q0B3"
-      }
-    },
-    {
-      id: "618182305456722288",
-      status: false,
-      serviceItem: ["洗车"],
-      finishedTime: "2019-10-11",
-      customer: {
-        name: "汤陆彦",
-        phone: "15651430850",
-        carNo: "苏F8Q0B3"
-      }
-    }
-  ];
+  count: number = 0;
+  isLoading: Boolean = false;
+  private carOptions: any = {};
+  private serviceList: any[] = [];
   private serviceItemType: any[] = [
     {
       label: "全部",
@@ -197,18 +231,223 @@ export default class Home extends Vue {
   ];
   private searchVal: string = "";
   private finishedText: string = "";
-  private finished: boolean = false;
+  private showDelete: boolean = false;
+  private showDetail: boolean = false;
   private loading: boolean = false;
+  private finished: boolean = false;
+  private refreshing: boolean = false;
+  private page: number = 0;
+  private total: number = 0;
+  async onLoad() {
+    // if (this.refreshing) {
+    //   this.serviceList = [];
+    //   this.refreshing = false;
+    // alert('load')
+    // }
+    this.page++;
+    this.getserviceList();
+  }
+  list: any[] = [];
+  private timerId: any = null;
+  private countNo: number = 0;
 
-  private getserviceList() {
-    console.log("getserviceList");
-    orderServices.get_order_list().then(res => {
-      console.log(res);
+  private carNumErrorMessage: string = "";
+  private applicantErrorMessage: string = "";
+  private phoneNumberErrorMessage: string = "";
+  private orderAmountErrorMessage: string = "";
+
+  private carNum: string = "";
+  private applicant: string = "";
+  private phoneNumber: string = "";
+  private orderAmount: number = 0;
+  private serviceItem: string = "";
+  private reserveTime: Number = 0;
+
+  private minHour: Number = 10;
+  private maxHour: Number = 20;
+  private minDate: Date = new Date();
+  private maxDate: Date = this.getMaxDate();
+  // private currentDate: any = {};
+  repairDate: any = "";
+  private orderId: string = "";
+  private getMaxDate(): Date {
+    let myDate = new Date();
+    myDate.setDate(myDate.getDate() + 31);
+    return myDate;
+  }
+  // get repairDate() {
+  //   if (this.currentDate instanceof Date) {
+  //     console.log('date',this.currentDate);
+  //     return dateformat(this.currentDate);
+  //   }
+
+  //   if (typeof this.currentDate === "string") {
+  //     console.log('string',this.currentDate)
+  //     return dateformat(new Date(this.currentDate));
+  //   }
+  //   // let begin_date = new Date();
+  //   // let end_date = new Date();
+  //   // begin_date.setTime(end_date.getTime() + 1 * 24 * 60 * 60 * 1000);
+  //   // return dateformat(begin_date);
+  // }
+
+  //回显订单数据
+  async goEdit(id: string) {
+    const data = await orderServices.getOrderDetailById(id);
+    this.showDetail = true;
+    this.carNum = data.car_no;
+    this.orderAmount = data.order_amount;
+    this.serviceItem = data.service_content;
+    this.repairDate = data.repair_time.split(" ")[0];
+    this.orderId = data.id;
+  }
+
+  private applicantValidate(): void {
+    if (!this.applicant) {
+      this.applicantErrorMessage = "车主名称不能为空";
+    } else {
+      this.applicantErrorMessage = "";
+    }
+  }
+
+  private phoneNumberValidate(): void {
+    const phoneNumber = this.phoneNumber;
+    if (!phoneNumber) {
+      this.phoneNumberErrorMessage = "车主手机号不能为空";
+    } else if (!/^1(3|4|5|6|7|8|9)\d{9}$/.test(phoneNumber)) {
+      this.phoneNumberErrorMessage = "输入手机号格式不对";
+    } else {
+      this.phoneNumberErrorMessage = "";
+    }
+  }
+
+  private orderAmountValidate(): void {
+    const orderAmount = this.orderAmount;
+    if (/^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$/.test(orderAmount + "")) {
+      this.orderAmountErrorMessage = "输入金额格式不对";
+    } else {
+      this.orderAmountErrorMessage = "";
+    }
+  }
+
+  get no_data() {
+    return !this.serviceList.length;
+  }
+
+  created() {
+    // this.getserviceList();
+  }
+
+  private async editOrder(id: string) {
+    const { code } = await orderServices.order_delete(id);
+    if (code == 200) {
+      this.$toast("操作成功");
+      this.getserviceList();
+    }
+  }
+
+  // private touchstart() {
+  //   clearInterval(this.timerId);
+  //   this.timerId = setInterval(() => {
+  //     this.countNo++;
+  //   }, 1000);
+  // }
+  // private touchend(id: string) {
+  //   if (this.countNo < 5) return;
+  //   clearInterval(this.timerId);
+  //   this.$toast(id);
+  //   this.showDelete = true;
+  // }
+
+  private goDetail(detail: any) {
+    this.showDetail = true;
+    const {
+      id,
+      carNo,
+      carOwner,
+      carTel,
+      amount,
+      finishedTime,
+      serviceItem
+    } = detail;
+    this.carOptions = {
+      carNum: carNo,
+      applicant: carOwner,
+      phoneNumber: carTel,
+      orderAmount: amount,
+      repairDate: finishedTime,
+      id
+    };
+  }
+
+  async confirm() {
+    const status = await orderServices.order_update({
+      id: this.orderId,
+      carNo: this.carNum,
+      repairTime: this.repairDate,
+      orderAmount: this.orderAmount,
+      carOwner: this.applicant,
+      carOwnerTel: this.phoneNumber,
+      serviceContent: this.serviceItem
     });
+
+    if (status) {
+      this.getserviceList();
+    }
+  }
+
+  cancel() {}
+
+  private async getserviceList() {
+    let filterVal = this.searchVal.toUpperCase();
+    const { rows, total } = await orderServices.get_order_list(
+      this.page,
+      filterVal
+    );
+    // console.log(rows,total);
+    this.total = total;
+
+    if (rows === null || rows.length === 0) {
+      this.finished = true;
+      return;
+    }
+
+    if (rows.length < 10) {
+      this.finished = true;
+    }
+
+    this.loading = false;
+    let rowData = rows.map((item: any) => {
+      return Object.assign(item, {
+        id: item.id,
+        orderId: item.order_id,
+        carNo: item.car_no || "未知",
+        carOwner: item.car_owner || "未知",
+        carTel: item.car_owner_tel || "未知",
+        serviceItem: item.service_content,
+        amount: item.order_amount,
+        finishedTime: item.repair_time ? item.repair_time.split(" ")[0] : "-"
+      });
+    });
+    if (this.page === 1) {
+      this.serviceList = rowData;
+    } else {
+      this.serviceList = this.serviceList.concat(rowData);
+    }
+
+    if (this.serviceList.length >= this.total) {
+      this.finished = true;
+    }
   }
 
   private onSearch() {
-    console.log("onSearch", this.searchVal);
+    this.page = 1;
+    this.getserviceList();
+  }
+
+  private onCancel() {
+    this.searchVal = "";
+    this.getserviceList();
   }
 
   private call() {
@@ -262,6 +501,9 @@ export default class Home extends Vue {
       padding: 0 2px;
       background-color: #154ab1;
       color: #fff;
+    }
+    .car-service {
+      color: tomato;
     }
     .phone {
       color: rgb(63, 205, 63);

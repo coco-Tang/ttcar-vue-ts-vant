@@ -1,0 +1,13 @@
+{
+  "name": "天天汽车 APP",
+  "short_name": "天天汽车",
+  "start_url": "/index.html",
+  "icons": [
+    {
+      "src": "images/favicon.ico",
+      "sizes": "144*144",
+      "type": "img/png"
+    }
+  ],
+  "display": "standalone"
+}

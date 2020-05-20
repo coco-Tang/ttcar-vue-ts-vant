@@ -9,6 +9,9 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Index from './layouts/index.vue';
 import Home from './views/home/Home.vue';
+import Order from './views/order/OrderEdit.vue';
+
+
 
 Vue.use(Router);
 
@@ -20,7 +23,7 @@ const router = new Router({
       path: '/',
       name: 'index',
       component: Index,
-      // redirect: 'home',
+      redirect: 'home',
       children: [
         {
           path: 'home',
@@ -35,10 +38,10 @@ const router = new Router({
         {
           path: 'orderedit',
           name: 'orderedit',
-          component: () => import(/* webpackChunkName: "orderedit" */ './views/order/OrderEdit.vue')
+          component: Order
         },
         {
-          path: 'ordersuccess',
+          path: 'ordersuccess/:id',
           name: 'ordersuccess',
           component: () => import(/* webpackChunkName: "ordersuccess" */ './views/order/OrderSuccess.vue')
         }, {
@@ -55,15 +58,7 @@ const router = new Router({
     {
       path: '/register',
       component: () => import(/* webpackChunkName: "register" */ './views/login/Register.vue')
-    },
-    {
-      path: '/about',
-      // name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
-    },
+    }
   ],
 });
 export default router
